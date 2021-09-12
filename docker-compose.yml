@@ -1,0 +1,64 @@
+version: '2.2'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.1
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      - node.name=es01
+      - cluster.name=wiaderko
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/localhost/localhost.key
+      - xpack.security.http.ssl.certificate_authorities=certs/localhost/localhost.crt
+      - xpack.security.http.ssl.certificate=certs/localhost/localhost.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
+      - xpack.security.transport.ssl.certificate=certs/localhost/localhost.crt
+      - xpack.security.transport.ssl.key=certs/localhost/localhost.key
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+      - ./certs:/usr/share/elasticsearch/config/certs
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.14.1
+    container_name: kibana
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=["https://elasticsearch:9200"] 
+      - ELASTICSEARCH_SSL_VERIFICATIONMODE=certificate
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=["/usr/share/kibana/certs/ca/ca.crt"]
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=CHANGE_ME_PLS
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=wiadrodanychpljestmegasupericool
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+    volumes:
+      - kibanadata:/usr/share/kibana/data
+      - ./certs:/usr/share/kibana/certs
+    networks:
+      - elastic
+
+volumes:
+  es-data:
+    driver: local
+  kibanadata:
+    driver: local
+
+networks:
+  elastic:
+    driver: bridge
