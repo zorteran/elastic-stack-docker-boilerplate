@@ -40,8 +40,8 @@ services:
       - ELASTICSEARCH_HOSTS=["https://elasticsearch:9200"] 
       - ELASTICSEARCH_SSL_VERIFICATIONMODE=certificate
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=["/usr/share/kibana/certs/ca/ca.crt"]
-      - ELASTICSEARCH_USERNAME=kibana
-      - ELASTICSEARCH_PASSWORD=CHANGE_ME_PLS
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=ZUdoygPyV3aF7beSAxWU
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=wiadrodanychpljestmegasupericool
     depends_on:
       - elasticsearch

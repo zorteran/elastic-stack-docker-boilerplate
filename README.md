@@ -3,7 +3,12 @@
 Created for the Elastic Stack Course of mine.
 https://wiadrodanych.pl/elastic
 
-## Steps:
+## This is the tldr way/script way:
+```bash
+./bootstrap.sh
+```
+
+## This is the manual way:
 ### 1
 ```
 sudo docker-compose up -d
